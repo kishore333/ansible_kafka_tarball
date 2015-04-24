@@ -5,7 +5,7 @@ Kafka needs zookeeper, you can run the standalone `zookeeper` but recommend to u
 
 Link to `ansible_zookeeper_tarball` : https://github.com/zubayr/ansible_zookeeper_tarball
 
-Prerequisite : Assuming we have already install the zookeeper cluster. 
+**Prerequisite : Assuming we have already install the zookeeper cluster.**
 
 ## Step 1: Download Kafka from Apache.
 
