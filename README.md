@@ -1,4 +1,4 @@
-# Ansible Kafka Installation From `tarballs`
+# Ansible Kafka Installation From `tarball`
 
 This Installation is configuration of Kafka from `tar.gz` file.
 Kafka needs zookeeper, you can run the standalone `zookeeper` but recommend to use the `ansible_zookeeper_tarball` repo.
