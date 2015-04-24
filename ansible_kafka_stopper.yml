@@ -1,0 +1,15 @@
+---
+- hosts: kafka
+  # using `root` user the do all the work.
+  remote_user: root
+
+  tasks:
+
+  - name: Starting kafka server on port 9091/9092.
+    command: /opt/kafka/bin/kafka-server-stop.sh
+    register: output
+    sudo: yes
+    sudo_user: hdadmin
+
+  - name: Debugging Output.
+    debug: msg="{{ output }}"

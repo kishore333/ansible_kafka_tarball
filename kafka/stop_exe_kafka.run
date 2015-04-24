@@ -1,0 +1,2 @@
+ansible-playbook ansible_kafka_tarball/ansible_kafka_stopper.yml --ask-pass
+ansible-playbook ansible_zookeeper_tarball/ansible_zookeeper_stopper.yml --ask-pass
