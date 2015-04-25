@@ -1,4 +1,22 @@
+
+<a name="AnsibleKafkaInstallationFromtarball"></a>
+
 # Ansible Kafka Installation From `tarball`
+
+
+---
+
+###Table of Contents
+
+* <a href="#Step1DownloadKafkafromApache">Step 1: Download Kafka from Apache.</a>
+* <a href="#Step2UpdatePathinansiblekafkayml">Step 2: Update Path in `ansible_kafka.yml`.</a>
+* <a href="#Step3UpdateHostsintheHostsfile">Step 3: Update Hosts in the Hosts file.</a>
+* <a href="#Step3OptionalUpdateUserWeuseausercalledhdadminforKafka">Step 3: (Optional) Update User - We use a user called `hdadmin` for Kafka.</a>
+* <a href="#Step4NowwearereadytoExecute">Step 4: Now we are ready to Execute.</a>
+* <a href="#Step5OptionalRunningSingleKafkaServerperNode">Step 5: (Optional) Running Single Kafka Server per Node.</a>
+
+---
+
 
 This Installation is configuration of Kafka from `tar.gz` file.
 Kafka needs zookeeper, you can run the standalone `zookeeper` but recommend to use the `ansible_zookeeper_tarball` repo.
@@ -7,12 +25,18 @@ Link to `ansible_zookeeper_tarball` : https://github.com/zubayr/ansible_zookeepe
 
 **Prerequisite : Assuming we have already install the zookeeper cluster.**
 
+
+<a name="Step1DownloadKafkafromApache"></a>
+
 ## Step 1: Download Kafka from Apache.
 
 Download the file in `kafka` directory.
 
     wget http://download.nextag.com/apache/kafka/0.8.2.1/kafka_2.9.2-0.8.2.1.tgz
 
+
+
+<a name="Step2UpdatePathinansiblekafkayml"></a>
 
 ## Step 2: Update Path in `ansible_kafka.yml`.
 
@@ -44,6 +68,9 @@ Also update the below line in the `ansible_kafka.yml` file.
     
 Add one of the `zookeeper-ip` in `host`, we are checking for zookeeper before we start the server here.
 
+
+<a name="Step3UpdateHostsintheHostsfile"></a>
+
 ## Step 3: Update Hosts in the Hosts file.
 
 Updated IP address as per your requirement.
@@ -51,7 +78,10 @@ Make sure you use unique ids for `kafka_broker_id1=11 kafka_port1=9091 kafka_bro
 
 Note: Make sure the `kafka_broker_id` is unique in the cluster and is not repeated. 
 
-## Step 3: (Optional) We use a user called `hdadmin` for Kafka.
+
+<a name="Step3OptionalUpdateUserWeuseausercalledhdadminforKafka"></a>
+
+## Step 3: (Optional) Update User - We use a user called `hdadmin` for Kafka.
 
 Change this to any user you like as per requirement. Currently we are using `hdadmin`.
 Note : Just find and replace `hdadmin` to any user you like. user will be created with password `hdadmin@123`
@@ -61,11 +91,17 @@ Password can be changed using the below python script.
     python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
 
 
+
+<a name="Step4NowwearereadytoExecute"></a>
+
 ## Step 4: Now we are ready to Execute.
 
     # ansible-playbook ansible_kafka.yml --ask-pass
 
-## Step 5: (Optional) If you want to run a Single Kafka Server per Node.
+
+<a name="Step5OptionalRunningSingleKafkaServerperNode"></a>
+
+## Step 5: (Optional) Running Single Kafka Server per Node.
 
 Just comment the below line in `kafka/kafka_server_starter.sh`.
 
