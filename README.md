@@ -64,3 +64,10 @@ Password can be changed using the below python script.
 ## Step 4: Now we are ready to Execute.
 
     # ansible-playbook ansible_kafka.yml --ask-pass
+
+## Step 5: (Optional) If you want to run a Single Kafka Server per Node.
+
+Just comment the below line in `kafka/kafka_server_starter.sh`.
+
+    echo -e "Starting 9092 Server"
+    nohup sh /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server12.properties > server12.admin.log.file &
