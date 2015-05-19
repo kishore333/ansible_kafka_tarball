@@ -1,8 +1,1 @@
 ---
-
-# Zookeeper Version.
-zookeeper_version: zookeeper-3.4.5-cdh5.1.2
-
-# Zookeeper Storage and Logging.
-zookeeper_data_store: /data/ansible/zookeeper
-zookeeper_logging: /data/ansible/zookeeper_logging

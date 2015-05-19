@@ -1,10 +1,5 @@
 ---
 
-kafka_version: kafka_2.9.2-0.8.2.1
-
-
-# Data Storage path on Destination kafka Nodes.
-kafka_data_store: /data/ansible/kafka
 kafka_topics: [ A, B, C, D ]
 
 # -----------------------

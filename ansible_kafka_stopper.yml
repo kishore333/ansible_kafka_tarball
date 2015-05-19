@@ -1,15 +1,29 @@
+
 ---
-- hosts: kafka
+- hosts: kafkanodes
   # using `root` user the do all the work.
   remote_user: root
+ 
+  tasks:
+ 
+  - name: Starting kafka server on port 9091/9092.
+    raw: if [ `jps | grep Kafka | xargs | awk '{ print $1}'` ]; then kill -9 `jps | grep Kafka | xargs | awk '{ print $1}'`; fi;
+    sudo: yes
+    sudo_user: "{{ kafka_user }}"
+ 
+  - name: Remove Directories.
+    command: rm -rf {{ common['soft_link_base_path'] }}/kafka {{ common['install_base_path'] }}/{{ kafka_version }} {{ kafka_data_store }}
 
+
+- hosts: zookeepernodes
+  remote_user: root
   tasks:
 
-  - name: Starting kafka server on port 9091/9092.
-    command: /opt/kafka/bin/kafka-server-stop.sh
-    register: output
+  - name: Stop Zookeeper
+    command: sh {{ common['soft_link_base_path'] }}/zookeeper/bin/zkServer.sh stop
     sudo: yes
-    sudo_user: hdadmin
+    sudo_user: "{{ zookeeper_user }}"
 
-  - name: Debugging Output.
-    debug: msg="{{ output }}"
+  - name: Remove Zookeeper Directories.
+    command: rm -rf {{ common['soft_link_base_path'] }}/zookeeper {{ common['install_base_path'] }}/{{ zookeeper_version }} {{ zookeeper_data_store }} {{ zookeeper_logging }}
+
