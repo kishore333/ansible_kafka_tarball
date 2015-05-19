@@ -10,8 +10,8 @@ Before we start read more information about Zookeeper/Kafka in the below link.
 
 ## Before we start.
 
-Please download [`kafka_2.9.2-0.8.2.1.tgz`](http://mirror.metrocast.net/apache/kafka/0.8.2.1/kafka_2.9.2-0.8.2.1.tgz) and store it in `file_archives` directory.**
-Please download [`zookeeper-3.4.5-cdh5.1.2.tar.gz`](http://archive.cloudera.com/cdh5/cdh/5/zookeeper-3.4.5-cdh5.1.2.tar.gz) and store it in `file_archives` directory.**
+Download [`kafka_2.9.2-0.8.2.1.tgz`](http://mirror.metrocast.net/apache/kafka/0.8.2.1/kafka_2.9.2-0.8.2.1.tgz) to `file_archives` directory.
+Download [`zookeeper-3.4.5-cdh5.1.2.tar.gz`](http://archive.cloudera.com/cdh5/cdh/5/zookeeper-3.4.5-cdh5.1.2.tar.gz) to `file_archives` directory.
 
 ## Get the script from Github.
 
