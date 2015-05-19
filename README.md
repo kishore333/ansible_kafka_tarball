@@ -14,6 +14,8 @@ Download [`kafka_2.9.2-0.8.2.1.tgz`](http://mirror.metrocast.net/apache/kafka/0.
 
 Download [`zookeeper-3.4.5-cdh5.1.2.tar.gz`](http://archive.cloudera.com/cdh5/cdh/5/zookeeper-3.4.5-cdh5.1.2.tar.gz) to `file_archives` directory.
 
+Download [`jdk-7u75-linux-x64.tar.gz`](http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase7-521261.html#jdk-7u75-oth-JPR) to `file_archives` directory.
+
 ## Get the script from Github.
 
 Below is the command to clone. 
