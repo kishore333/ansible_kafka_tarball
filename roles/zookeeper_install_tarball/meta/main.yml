@@ -1,0 +1,4 @@
+# file: roles/kafka/meta/main.yml
+
+#dependencies:
+#  - { role: jdk }

@@ -1,0 +1,6 @@
+# file: roles/common/meta/main.yml
+#
+#dependencies:
+#  - { role: common }
+#  - { role: jdk }
+#  - { role: zookeeper_install_tarball }

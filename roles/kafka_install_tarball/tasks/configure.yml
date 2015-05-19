@@ -1,0 +1,15 @@
+---
+
+  - name: Updating Configuration File in kafka.
+    template: src={{ item }} dest={{ common['soft_link_base_path'] }}/kafka/config/{{ item }} owner={{ kafka_user }} group={{ kafka_group }}
+    with_items:
+      - server11.properties
+      - server12.properties
+      - log4j.properties
+      - kafka_server_starter.sh
+
+  - name: Creating a directory for kafka 11/12.
+    file: path={{ kafka_data_store }}/{{ item }} owner={{ kafka_user }} group={{ kafka_group }} state=directory
+    with_items:
+      - "{{ kafka_broker_id1 }}"
+      - "{{ kafka_broker_id2 }}"
