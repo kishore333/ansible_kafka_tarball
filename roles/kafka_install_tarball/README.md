@@ -16,7 +16,7 @@ Variabled are in `default/mail.yml`
     
     # Data Storage path on Destination kafka Nodes.
     kafka_data_store: /data/ansible/kafka
-    kafka_topics: [ B, E, event, error ]
+    kafka_topics: [ A, B, C, D ]
     
     # -----------------------
     # root Logger Options. 

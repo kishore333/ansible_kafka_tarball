@@ -26,15 +26,14 @@ Below is the command to clone.
 Update the host file to reflect your server IPs.
 Currently `hosts` file looks as below.
 
-    [zookeepers]
+    [zookeepernodes]
     10.10.18.10 zookeeper_id=1
     10.10.18.12 zookeeper_id=2
     10.10.18.13 zookeeper_id=3
     
-    [kafka-nodes]
+    [kafkanodes]
     10.10.18.10 kafka_broker_id1=11 kafka_port1=9091 kafka_broker_id2=12 kafka_port2=9092
     10.10.18.12 kafka_broker_id1=13 kafka_port1=9091 kafka_broker_id2=14 kafka_port2=9092
-    10.10.18.13 kafka_broker_id1=15 kafka_port1=9091 kafka_broker_id2=16 kafka_port2=9092
     
 ## Step 2: Update `group_vars` information as required.
 
