@@ -1,106 +1,21 @@
----
-- hosts: kafka-nodes
-  vars:
-     # Remote Destination path on kafka Nodes.
-     remote_dest_path: /root/ansible/kafka
+#
+#-----------------------------
+# ZOOKEEPER CLUSTER SETUP
+#-----------------------------
+#
 
-     # Source Base path where the ansible script is running.
-     src_base_path: /root/ansible_scripts/ansible_kafka_tarball
-
-     # Data Storage path on Destination kafka Nodes.
-     kafka_data_store: /data1/ansible/kafka
-
-     # kafka Install Directory on Destination kafka Nodes.
-     kafka_base: /opt/kafka
-
-     # Zookeeper Variables.
-     zookeeper_connect: ['10.10.18.91']
-
-     # Zookeeper Cluster Information. IP:port
-     zookeeper_cluster: '10.10.18.91:2181,10.10.18.92:2181,10.10.18.93:2181'
-
-  # using `root` user the do all the work.
+- hosts: zookeepernodes
   remote_user: root
+  roles:
+    - zookeeper_install_tarball
 
-  tasks:
+#
+#-----------------------------
+# KAFKA CLUSTER SETUP
+#-----------------------------
+#
 
-  # Assuming that we have already downloaded `kafka` in `/root/ansible_scripts/ansible_kafka_tarball/kafka`
-  
-  - name: Create a Remote Directory to Store our Data.
-    file: path={{ remote_dest_path }} state=directory
-
-  - name: Copy Archive from ConfMgr to Detination Servers.
-    copy: src={{ src_base_path }}/kafka/kafka_2.9.2-0.8.2.1.tgz dest={{ remote_dest_path }}
-
-  - name: Copy `server11.properties` files to Destination Servers.
-    copy: src={{ src_base_path }}/kafka/{{ item }} dest={{ remote_dest_path }}
-    with_items:
-      - server11.properties
-      - server12.properties
-      - kafka_server_starter.sh
- 
-  # Password Generated using python command below.
-  #     python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
-  # Current `hdadmin` password is = hdadmin@123
-
-  - name: Create a User `hdadmin` for all our Hadoop Modules.
-    user: name=hdadmin password=$6$rounds=40000$1qjG/hovLZOkcerH$CK4Or3w8rR3KabccowciZZUeD.nIwR/VINUa2uPsmGK/2xnmOt80TjDwbof9rNvnYY6icCkdAR2qrFquirBtT1
-
-  - name: UnArchive the Package in Destination Server.
-    unarchive: creates=/opt/kafka_2.9.2-0.8.2.1 src={{ remote_dest_path }}/kafka_2.9.2-0.8.2.1.tgz dest=/opt owner=hdadmin group=hdadmin 
-
-  - name: Change Directory Permissions.
-    file: path=/opt/kafka_2.9.2-0.8.2.1 owner=hdadmin group=hdadmin recurse=yes
-
-  - name: Creating a Symbolic Link in /opt/kafka.
-    file: src=/opt/kafka_2.9.2-0.8.2.1 path={{ kafka_base }} state=link owner=hdadmin group=hdadmin
-
-  - name: Updating Configuration File in kafka.
-    template: src={{ remote_dest_path }}/{{ item }} dest={{ kafka_base }}/config/{{ item }} owner=hdadmin group=hdadmin mode=777
-    with_items:
-      - server11.properties
-      - server12.properties
-      - kafka_server_starter.sh
-
-
-  - name: Creating a directory for kafka 11/12.
-    file: path={{ kafka_data_store }}/{{ item }} owner=hdadmin group=hdadmin state=directory
-    with_items:
-      - "{{ kafka_broker_id1 }}"
-      - "{{ kafka_broker_id2 }}"
-
-  # Start standalone zookeeper for Testing. 
-#  - name: Starting zookeeper standalone.
-#    command: chdir=/home/hdadmin sh /opt/kafka/bin/zookeeper-server-start.sh /opt/kafka/config/zookeeper.properties
-#    async: 45
-#    poll: 0
-#    sudo: yes
-#    sudo_user: hdadmin
-
-  - name: Lets wait to see if we have Port 2181 is available.
-    wait_for: host=10.10.18.91 port=2181 delay=5 timeout=15
-
-  - name: Starting kafka server on port 9091/9092.
-    command: /opt/kafka/config/kafka_server_starter.sh 
-    register: output
-    sudo: yes
-    sudo_user: hdadmin
-
-  - name: Lets through some Debug.stdout Output.
-    debug: msg="{{ output.stdout }}"
-
-  - name: Lets through some Debug.stderr Output.
-    debug: msg="{{ output.stderr }}" 
-
-  - name: Lets wait for 9091/9092 to be available.
-    wait_for: port=9091 delay=5 timeout=15
-
-  - name: Creating Topics.
-    command: chdir=/home/hdadmin sh /opt/kafka/bin/kafka-topics.sh --create --zookeeper {{ zookeeper_cluster }} --replication-factor 1 --partitions 1 --topic {{ item }}
-    sudo: yes
-    sudo_user: hdadmin
-    with_items:
-      - kafka_begin
-      - kafka_end
-      - B
-      - kafka_crash
+- hosts: kafkanodes
+  remote_user: root
+  roles:
+    - kafka_install_tarball

@@ -1,109 +1,69 @@
+# Kafka Setup 
 
-<a name="AnsibleKafkaInstallationFromtarball"></a>
+This is a simple Kafka setup. In this setup we are running `kafka` over a dedicated `zookeeper` service. 
+(NOT the standalone zookeeper which comes with `kafka`)
 
-# Ansible Kafka Installation From `tarball`
+Before we start read more information about Zookeeper/Kafka in the below link.
+So that we get an idea of how the setup is done. 
 
+1. Setup [Zookeeper](roles/zookeeper_install_tarball/README.md). 
+2. Setup [Kafka](roles/kafka_install_tarball/README.md). Server running on ports 9091/9092 ports on each server.
 
----
+## Before we start.
 
-###Table of Contents
-
-* <a href="#Step1DownloadKafkafromApache">Step 1: Download Kafka from Apache.</a>
-* <a href="#Step2UpdatePathinansiblekafkayml">Step 2: Update Path in `ansible_kafka.yml`.</a>
-* <a href="#Step3UpdateHostsintheHostsfile">Step 3: Update Hosts in the Hosts file.</a>
-* <a href="#Step3OptionalUpdateUserWeuseausercalledhdadminforKafka">Step 3: (Optional) Update User - We use a user called `hdadmin` for Kafka.</a>
-* <a href="#Step4NowwearereadytoExecute">Step 4: Now we are ready to Execute.</a>
-* <a href="#Step5OptionalRunningSingleKafkaServerperNode">Step 5: (Optional) Running Single Kafka Server per Node.</a>
-
----
+Please download [`kafka_2.9.2-0.8.2.1.tgz`](http://mirror.metrocast.net/apache/kafka/0.8.2.1/kafka_2.9.2-0.8.2.1.tgz) and store it in `file_archives` directory.**
+Please download [`zookeeper-3.4.5-cdh5.1.2.tar.gz`](http://archive.cloudera.com/cdh5/cdh/5/zookeeper-3.4.5-cdh5.1.2.tar.gz) and store it in `file_archives` directory.**
 
 
-This Installation is configuration of Kafka from `tar.gz` file.
-Kafka needs zookeeper, you can run the standalone `zookeeper` but recommend to use the `ansible_zookeeper_tarball` repo.
+## Step 1: Update Hosts File.
 
-Link to `ansible_zookeeper_tarball` : https://github.com/zubayr/ansible_zookeeper_tarball
+Update the host file to reflect your server IPs.
+Currently `hosts` file looks as below.
 
-**Prerequisite : Assuming we have already install the zookeeper cluster.**
-
-
-<a name="Step1DownloadKafkafromApache"></a>
-
-## Step 1: Download Kafka from Apache.
-
-Download the file in `kafka` directory.
-
-    wget http://download.nextag.com/apache/kafka/0.8.2.1/kafka_2.9.2-0.8.2.1.tgz
-
-
-
-<a name="Step2UpdatePathinansiblekafkayml"></a>
-
-## Step 2: Update Path in `ansible_kafka.yml`.
-
-Update path in the `ansible_kafka.yml` file so that it reflects the path required.
-As shown below.
-
-     # Remote Destination path on kafka Nodes.
-     remote_dest_path: /root/ansible/kafka
-
-     # Source Base path where the ansible script is running.
-     src_base_path: /root/ansible_scripts/ansible_kafka_tarball
-
-     # Data Storage path on Destination kafka Nodes.
-     kafka_data_store: /data1/ansible/kafka
-
-     # kafka Install Directory on Destination kafka Nodes.
-     kafka_base: /opt/kafka
-
-     # Zookeeper Variables.
-     zookeeper_connect: ['10.10.18.91']
-
-     # Zookeeper Cluster Information. IP:port
-     zookeeper_cluster: '10.10.18.91:2181,10.10.18.92:2181,10.10.18.93:2181'
-
-Also update the below line in the `ansible_kafka.yml` file.
-
-    - name: Lets wait to see if we have Port 2181 is available.
-    wait_for: host=10.10.18.91 port=2181 delay=5 timeout=15
+    [zookeepers]
+    10.10.18.10 zookeeper_id=1
+    10.10.18.12 zookeeper_id=2
+    10.10.18.13 zookeeper_id=3
     
-Add one of the `zookeeper-ip` in `host`, we are checking for zookeeper before we start the server here.
+    [kafka-nodes]
+    10.10.18.10 kafka_broker_id1=11 kafka_port1=9091 kafka_broker_id2=12 kafka_port2=9092
+    10.10.18.12 kafka_broker_id1=13 kafka_port1=9091 kafka_broker_id2=14 kafka_port2=9092
+    10.10.18.13 kafka_broker_id1=15 kafka_port1=9091 kafka_broker_id2=16 kafka_port2=9092
+    
+## Step 2: Update `group_vars` information as required.
+
+Update users/password and Directory information in `group_vars/all` file.
+Currently we have the below information.
+    
+    # --------------------------------------
+    # USERs
+    # --------------------------------------
+    
+    zookeeper_user: zkadmin
+    zookeeper_group: zkadmin
+    zookeeper_password: $6$rounds=40000$1qjG/hovLZOkcerH$CK4Or3w8rR3KabccowciZZUeD.nIwR/VINUa2uPsmGK/2xnmOt80TjDwbof9rNvnYY6icCkdAR2qrFquirBtT1
+    
+    kafka_user: kafkaadmin
+    kafka_group: kafkaadmin
+    kafka_password: $6$rounds=40000$1qjG/hovLZOkcerH$CK4Or3w8rR3KabccowciZZUeD.nIwR/VINUa2uPsmGK/2xnmOt80TjDwbof9rNvnYY6icCkdAR2qrFquirBtT1
+    
+    
+    # --------------------------------------
+    # COMMON FOR INSTALL PATH
+    # --------------------------------------
+    
+    # Common Location information.
+    common:
+      install_base_path: /usr/local
+      soft_link_base_path: /opt
+
+## Step 3: Update `default` information in `roles/<install_role>/default/main.yml`.
+
+Update the `default` values if required.
 
 
-<a name="Step3UpdateHostsintheHostsfile"></a>
+## Step 4: Executing.
 
-## Step 3: Update Hosts in the Hosts file.
-
-Updated IP address as per your requirement.
-Make sure you use unique ids for `kafka_broker_id1=11 kafka_port1=9091 kafka_broker_id2=12 kafka_port2=9092`, as this will be used later in the script.
-
-Note: Make sure the `kafka_broker_id` is unique in the cluster and is not repeated. 
-
-
-<a name="Step3OptionalUpdateUserWeuseausercalledhdadminforKafka"></a>
-
-## Step 3: (Optional) Update User - We use a user called `hdadmin` for Kafka.
-
-Change this to any user you like as per requirement. Currently we are using `hdadmin`.
-Note : Just find and replace `hdadmin` to any user you like. user will be created with password `hdadmin@123`
-
-Password can be changed using the below python script.
-
-    python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
-
-
-
-<a name="Step4NowwearereadytoExecute"></a>
-
-## Step 4: Now we are ready to Execute.
-
-    # ansible-playbook ansible_kafka.yml --ask-pass
-
-
-<a name="Step5OptionalRunningSingleKafkaServerperNode"></a>
-
-## Step 5: (Optional) Running Single Kafka Server per Node.
-
-Just comment the below line in `kafka/kafka_server_starter.sh`.
-
-    echo -e "Starting 9092 Server"
-    nohup sh /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server12.properties > server12.admin.log.file &
+Below is the command. 
+    
+    ahmed@ahmed-server ansible_kafka_tarball]$ ansible-playbook ansible_kafka.yml -i hosts --ask-pass
