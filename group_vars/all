@@ -1,0 +1,23 @@
+# --------------------------------------
+# USERs
+# --------------------------------------
+
+zookeeper_user: zkadmin
+zookeeper_group: zkadmin
+zookeeper_password: $6$rounds=40000$1qjG/hovLZOkcerH$CK4Or3w8rR3KabccowciZZUeD.nIwR/VINUa2uPsmGK/2xnmOt80TjDwbof9rNvnYY6icCkdAR2qrFquirBtT1
+
+kafka_user: kafkaadmin
+kafka_group: kafkaadmin
+kafka_password: $6$rounds=40000$1qjG/hovLZOkcerH$CK4Or3w8rR3KabccowciZZUeD.nIwR/VINUa2uPsmGK/2xnmOt80TjDwbof9rNvnYY6icCkdAR2qrFquirBtT1
+
+
+# --------------------------------------
+# COMMON FOR INSTALL PATH
+# --------------------------------------
+
+# Common Location information.
+common:
+  install_base_path: /usr/local
+  soft_link_base_path: /opt
+
+
