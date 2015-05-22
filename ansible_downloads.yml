@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  remote_user: root
+  tasks:
+    - name: Download JDK.
+      command: chdir=/tmp creates=/tmp/{{ jdk_download_filename }} wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u75-b13/{{ jdk_download_filename }}"
+
+    - name: Download Zookeeper.
+      command: chdir=/tmp creates=/tmp/{{ zookeeper_version }}.tar.gz  wget http://archive.cloudera.com/cdh5/cdh/5/{{ zookeeper_version }}.tar.gz
+
+    - name: Download Kafka.
+      command: chdir=/tmp creates=/tmp/{{ kafka_version }}.tar.gz  wget http://mirror.metrocast.net/apache/kafka/0.8.2.1/{{ kafka_version }}.tgz
