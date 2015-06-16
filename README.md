@@ -46,6 +46,8 @@ Currently we have the below information.
     # USERs
     # --------------------------------------
     
+    # password below for all the users is `hdadmin@123`
+    
     zookeeper_user: zkadmin
     zookeeper_group: zkadmin
     zookeeper_password: $6$rounds=40000$1qjG/hovLZOkcerH$CK4Or3w8rR3KabccowciZZUeD.nIwR/VINUa2uPsmGK/2xnmOt80TjDwbof9rNvnYY6icCkdAR2qrFquirBtT1
